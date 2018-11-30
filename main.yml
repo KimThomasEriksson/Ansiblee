@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  become: true
+
+- hosts: webb
+  roles:
+    - webbserver
+    - webbapp
+
+- hosts: databas
+  roles:
+    - dbserver
+
+- hosts: all
+  roles:
+    - common

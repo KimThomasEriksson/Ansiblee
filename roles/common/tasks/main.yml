@@ -1,0 +1,5 @@
+
+---
+- name: Sätter timezone till UTC
+  timezone:
+    name: UTC

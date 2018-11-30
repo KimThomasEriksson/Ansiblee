@@ -1,0 +1,42 @@
+- include_vars: mysql.yml
+
+- name: Installerar nödvändiga paket
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - "@Development tools"
+    - perl
+    - perl-App*
+    - perl-DBD*
+    - perl-Template*
+    - perl-YAML*
+    - perl-Capture-Tiny*
+    - libsemanage-python
+- cpanm:
+    name: Dancer
+
+- name: Laddar ner från git
+  git:
+    repo: https://github.com/initab/demoapp.git
+    dest: /var/www/demo
+    force: yes
+
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+
+- name: Template to edit production.yml file
+  template:
+    src: "production.yml"
+    dest: "/var/www/demo/environments"
+
+- name: Copy demo.unit
+  copy:
+    src: "demo.unit"
+    dest: "/etc/systemd/system/demod.service"
+
+  

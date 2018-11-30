@@ -1,0 +1,11 @@
+
+- name: restart_httpd
+  service:
+    name: httpd
+    state: restarted
+
+- name: start_on_boot_httpd
+  service:
+    name: httpd
+    enabled: yes
+    state: started   

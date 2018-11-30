@@ -1,0 +1,40 @@
+
+- name: Installerar VG paket och Httpd
+  yum:
+    name: "{{item}}"
+    state: present
+
+  with_items:
+    - mod_security
+    - mod_ssl
+    - mod_wsgi
+    - mod_ldap
+    - mod_auth_kerb
+    - mod_auth_gssapi
+    - httpd
+  notify:
+    - start_on_boot_httpd
+
+- name: Template to edit vhost file
+  template:
+    src: "min_vhost.conf"
+    dest: "/etc/httpd/conf.d/"
+  notify:
+    - restart_httpd
+    
+
+- name: Creating folder
+  file:
+    path: "/var/www/kim.org/"
+    state: directory
+    owner: apache
+    group: apache
+
+- name: Copy index.html
+  copy:
+    src: "index.html"
+    dest: "/var/www/kim.org/"
+    owner: apache
+    group: apache
+  notify:
+    - restart_httpd
